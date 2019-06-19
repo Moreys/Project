@@ -8,6 +8,7 @@
 #ifndef __DICTIONARY_HPP__
 #define __DICTIONARY_HPP__
 #include "Configuration.hpp"
+#include "Mylog.hpp"
 
 #include "pthread.h"
 
@@ -42,10 +43,12 @@ public:
         if(!ifsDic)
         {
             cout << "文件打开错误" << endl;
+            LogError("文件打开错误");
         }
         if(!ifsIndex)
         {
             cout << "文件打开错误" << endl;
+            LogError("文件打开错误");
         }
         string line;
         while(getline(ifsDic, line))

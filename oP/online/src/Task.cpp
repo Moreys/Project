@@ -26,15 +26,41 @@ void Task::execute()
 {
     //执行查询的各项操作，最后封装结果返回给客户端
     string response = _queryWord;
-    _conn->sendInLoop(response);
+    queryIndexTable();
 
+#if 1
+    while(!_resultQue.empty())
+    {
+       _resultQue.pop();
+    }
+#endif
+#if 0
+    while(!_resultQue.empty())
+    {
+        cout << "打印结果" << endl;
+        cout << _resultQue.top()._word;
+       _resultQue.pop();
+    }
+#endif
+    _conn->sendInLoop(response);
 }
 
 vector<Character> Task::getOneChareacter(const string & word)
 {
     auto cit = word.begin();
     vector<Character> ret;
-    while(cit<word.end())
+
+#if 1
+    while(cit < word.end())
+    {
+        Character tmp(1, *cit);
+        ret.push_back(tmp);
+        cit++;
+    }
+#endif
+
+#if 0
+    while(cit < word.end())
     {
         if(224 == (*cit & 224))
         {
@@ -57,6 +83,8 @@ vector<Character> Task::getOneChareacter(const string & word)
             cit++;
         }
     }
+#endif
+    
     return ret;
 }
 
@@ -69,6 +97,8 @@ void Task::queryIndexTable()
 
     vector<Character> oneChareacter = getOneChareacter(_queryWord);
     set<int>allRally;
+
+#if 1
     for(auto myChare : oneChareacter)
     {
         auto cit = index.find(myChare);
@@ -80,18 +110,38 @@ void Task::queryIndexTable()
             }
         }
     }
+#endif 
+
+#if 0 //测试后得到的set没有问题
+    for(auto myChare : allRally)
+    {
+        cout << myChare << endl;
+    }
+#endif
+
     statistic(allRally); //读取跟候选词相近的放入到里面进行其他计算
+    LogInfo("读取set内容结束");
 }
 
 //function: 进行计算
+//args: iset: 根据单词首字母得到的索引多对应的所有单词
 void Task::statistic(set<int> & iset)
 {
     vector<pair<string, int>> dict = (Singleton<Dictionary>::getInstance(
               Singleton<Configuration>::getInstance(PATH)->getEnglishDic(),
               Singleton<Configuration>::getInstance(PATH)->getEnIndex()))->getDic();
+    LogInfo("开始计算距离");
+    
     for(auto & idx : iset)
     {
-        string key = dict[idx].first;
+        string key = dict[idx].first; //找到对应key 的下标
+
+#if 0 //测试过获取key和value没有问题
+        cout << "key = " <<  key << endl;
+        cout << "value = " <<  dict[idx].second << endl;
+#endif
+
+#if 1
         int iDist  = distance(key); //计算最小编辑距离
         if(iDist <= 3)
         {
@@ -101,7 +151,9 @@ void Task::statistic(set<int> & iset)
             res._iFreq = dict[idx].second;
             _resultQue.push(res); //满足条件的记录三个状态，进入队列
         }
+#endif
     }
+    LogInfo("计算距离结束");
 }
 
 //function: 计算最小编辑距离
@@ -132,9 +184,9 @@ int Task::distance(const string & rhs)
     }
     for(i = 1; i < len1; ++i)
     {
-        for(j = 1; j < len2; ++j)
+        for(j = 1; j <= len2; ++j)
         {
-            int cost = ((queryChara[i - 1] == indexChara[j - 1] ? 0 : 1));
+            int cost = ((queryChara[i - 1] == indexChara[j - 1]) ? 0 : 1);
             int deletion = edit[i - 1][j] + 1;
             int insertion = edit[i][j - 1] + 1;
             int substitution = edit[i - 1][j - 1] + cost;
