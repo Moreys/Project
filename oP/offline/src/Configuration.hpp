@@ -11,8 +11,10 @@
 
 #include <string>
 #include <map>
+#include <vector>
 using std::string;
 using std::map;
+using std::vector;
 
 namespace morey
 {
@@ -28,9 +30,15 @@ public:
     {
         return _filepath;
     }
+    string getCnTxtPath();
+    string getCnDicPath();
+    string getcnFile();
+    string getCnIdx();
+    vector<string> & getCndictFile();
 private:
     string _filepath;
     map<string, string> _configMap;
+    vector<string> _cndictFile;
 };
 
 

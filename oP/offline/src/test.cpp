@@ -13,7 +13,9 @@ using std::endl;
 
 int main()
 {
-    morey::DictProducer myconfig("/root/project/oP/offline/conf/dicq.conf"); 
+    morey::DictProducer myconfig(
+                "/root/project/oP/offline/conf/dicq.conf"); 
+    myconfig.init();
     return 0;
 }
 

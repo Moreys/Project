@@ -35,20 +35,29 @@ public:
 public:
     void build_dict();
     void build_cn_dict();
-    void build_index();
-    void reand_dict();
+    void build_enIndex();
+    void build_cnIndex();
+    void reand_endict();
+    void reand_cndict();
     void init();
     void show_file() const;
     void show_dict() const;
+    vector<string> getOneChareacter( const string & word);
 private:
     void get_files();
-    void push_dict();
+    void push_endict();
+    void push_cndict();
+    void push_cnIndex();
 private:
     string _dir;
     vector<string> _files;
-    vector<std::pair<string, int>> _vecIdx;
-    map<string, string> _dict;
-    map<string, set< int>> _mapIdx;
+    vector<std::pair<string, int>> _enIdx;
+    vector<std::pair<string, int>> _cnIdx;
+    map<string, string> _endict;
+    map<string, int> _cndict;
+    map<string, set< int>> _enMapIdx;
+    map<string, set< int>> _cnMapIdx;
+
     Dictionary  _dictionary;
     Configuration _config;
 //    SplitTool * splitTool;

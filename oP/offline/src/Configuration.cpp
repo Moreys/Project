@@ -6,6 +6,10 @@
  ************************************************************************/
 
 #include "Configuration.hpp"
+#include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+
 
 #include <iostream>
 #include <fstream>
@@ -18,7 +22,7 @@ namespace morey
 {
 
 Configuration::Configuration(const string & filepath)
-: _filepath(filepath)
+    : _filepath(filepath)
 {
     readConfiguration();
 }
@@ -49,6 +53,92 @@ void Configuration::readConfiguration()
     {
         cout << "ifstream open error" << endl;
     }
+}
+string Configuration::getCnTxtPath()
+{
+    string cndicTxt;
+    auto it = _configMap.find("cndictxt");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        cndicTxt = it->second;
+    }
+    return cndicTxt;
+}
+string Configuration::getCnDicPath()
+{
+    string cndict;
+    auto it = _configMap.find("cndict");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        cndict = it->second;
+    }
+    return cndict;
+}
+
+string Configuration::getcnFile()
+{
+    string cnfile;
+    auto it = _configMap.find("cnfile");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        cnfile = it->second;
+    }
+    return cnfile;
+}
+string Configuration::getCnIdx()
+{
+    string cnIdx;
+    auto it = _configMap.find("cnidx");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        cnIdx = it->second;
+    }
+    return cnIdx;
+}
+
+vector<string> & Configuration::getCndictFile()
+{
+    struct dirent * pDirInfo;
+    DIR * pDir;
+    pDir = opendir(getcnFile().c_str());
+    if(NULL == pDir)
+    {
+        perror("open dir fail");
+    }
+    string name;
+    while((pDirInfo = readdir(pDir)) != NULL)
+    {
+        name = pDirInfo->d_name;
+        if(name == "." || name == "..")
+        {
+            continue;
+        }
+        _cndictFile.push_back(pDirInfo->d_name);
+    }
+#if 1
+    for(auto & elem : _cndictFile)
+    {
+        std::cout << elem << std::endl;
+    }
+#endif
+    closedir(pDir);
+    return _cndictFile;
 }
 
 void Configuration::debug()

@@ -1,5 +1,5 @@
-NC_DIR:= ./
-SRC_DIR:= ./
+NC_DIR:= ../include
+SRC_DIR:= ../include/oo
 SRCS:=$(wildcard *.cpp)
 OBJS:= $(patsubst %.cpp, %.o, $(SRCS))
 LIBS:= -lpthread -llog4cpp
