@@ -7,6 +7,8 @@
                                                                          
 #include "SpellcorrectServer.hpp"
 #include "Configuration.hpp"
+#include "TimerThread.hpp"
+#include "CacheManager.hpp"
 #include "Mylog.hpp"
 
 #include <unistd.h>
@@ -21,7 +23,13 @@ using namespace morey;
 
 int main()
 {
-    
+#if 1
+    CacheManager * cacheManage = Singleton<CacheManager>::
+                                  getInstance(Singleton<Configuration>::
+                                  getInstance(PATH)->getCachePath());
+    TimerThread timer(1,40,std::bind(&CacheManager::periodicUpdateCache, cacheManage));
+    timer.start();
+#endif
     SpellcorrectServer sp(Singleton<Configuration>::getInstance(PATH)->getIp(),
                           Singleton<Configuration>::getInstance(PATH)->getPort(),
                           4, 10);

@@ -8,6 +8,8 @@
 #ifndef __CACHEMANAGER_HPP_
 #define __CACHEMANAGER_HPP_
 
+#include "Cache.hpp"
+
 #include <vector>
 #include <iostream>
 #include <string>
@@ -20,16 +22,16 @@ class Cache;
 class CacheManager
 {
 public:
-    CacheManager(const string & fileName);
+    CacheManager( string  fileName);
 
 public:
-    static void initCahche(const string & fileName);
-    static Cache & getCache(size_t idx);
-    static void periodicUpdateCache();
+     void initCahche( string fileName);
+     Cache & getCache(size_t idx);
+     void periodicUpdateCache();
 
 private:
-    static string _cachePath;
-    static vector<Cache> _cacheNumber;
+     string _cachePath;
+     vector<Cache> _cacheNumber;
 };
 }//end of namespace morey
 

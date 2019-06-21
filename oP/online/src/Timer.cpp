@@ -6,6 +6,7 @@
  ************************************************************************/
 
 #include "Timer.hpp"
+#include "Mylog.hpp"
 
 #include <unistd.h>
 #include <poll.h>
@@ -32,6 +33,8 @@ void Timer::start()
         else if(-1 == nready)
         {
             perror(">> poll error");
+            LogError("pool error");
+            exit(EXIT_FAILURE);
         }
         else if(0 == nready)
         {
@@ -56,6 +59,11 @@ void Timer::stop()
         setTime(0, 0);
         _isStarted = false;
     }
+}
+Timer::~Timer()
+{
+    if(_isStarted)
+        stop();
 }
 
 void Timer::setTime(int initSec, int intervalSec)

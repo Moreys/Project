@@ -8,12 +8,17 @@
 #include "TcpConnection.hpp"
 #include "InetAddress.hpp"
 #include "EventLoop.hpp"
+#include "Mylog.hpp"
 
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 
 #include <sstream>
+#include <iostream>
+#include <string>
+using namespace std;
 
 namespace morey
 {
@@ -37,8 +42,15 @@ TcpConnection::~TcpConnection()
 string TcpConnection::receive()
 {
 	char buff[65536] = {0};
+    char buff1[1024] = {0};
 	_socketIO.readline(buff, sizeof(buff));
-	return string(buff);
+#if 1 //处理得到的数据，由客户端处理，
+    cout << "处理前收到的大小" << string(buff).size() << endl;    
+    memcpy(buff1,buff,strlen(buff) -1);
+    cout << "处理后收到的大小" << string(buff1).size() << endl;    
+    cout << buff1 << endl;
+#endif
+	return string(buff1);
 }
 	
 void TcpConnection::send(const string & msg)

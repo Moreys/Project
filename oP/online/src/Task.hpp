@@ -10,6 +10,7 @@
 #include "Dictionary.hpp"
 #include "TcpConnection.hpp"
 #include "Configuration.hpp"
+#include "Cache.hpp"
 #include <string>
 #include <vector>
 #include <queue>

@@ -7,6 +7,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <iostream>
+using namespace std;
 #define ERR_EXIT(m) \
     do { \
         perror(m);\
@@ -51,8 +53,8 @@ void do_service(int sockfd)
     while(1)
     {
         fgets(sendbuf, sizeof sendbuf, stdin);
+        cout << sendbuf << endl;
         write(sockfd, sendbuf, strlen(sendbuf));
-		//sleep(5);
 
         //read
         int nread = read(sockfd, recvbuf, sizeof recvbuf);

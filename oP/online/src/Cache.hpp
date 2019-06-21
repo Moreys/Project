@@ -20,7 +20,6 @@ class Cache
 {
 public:
     Cache(int mum);
-    Cache(const Cache & cache);
 public:
     void addElement(const string & key, const string & value);
     void readFromFile(const string & fileName);

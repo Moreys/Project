@@ -65,7 +65,7 @@ void DictProducer::build_cn_dict()
 
 void DictProducer::build_index()
 {
-    int flag = 15;
+    int flag = 10;
     string str;
     stringstream stream;
     set<int> setInd;

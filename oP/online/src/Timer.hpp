@@ -24,6 +24,7 @@ public:
     , _isStarted(false)
     , _cb(std::move(cb))
     {}
+    ~Timer();
 public:
     void start();
     void stop();

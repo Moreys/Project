@@ -9,6 +9,8 @@
 #include "Configuration.hpp"
 #include "Dictionary.hpp"
 #include "Cache.hpp"
+#include "Thread.hpp"
+#include "CacheManager.hpp"
 #include "cJSON.hpp"
 #include <string.h>
 #include <algorithm>
@@ -20,7 +22,9 @@ namespace morey
 Task::Task(const string & queryWord,const TcpConnectionPtr & conn)
 : _queryWord(queryWord)
 , _conn(conn)
-{}
+    {
+    }
+
 
 //function:相应客户端的请求
 bool Task::response(Cache & cache)
@@ -35,10 +39,16 @@ bool Task::response(Cache & cache)
 //function: 执行查询
 void Task::execute()
 {
-    if(false)//先判断缓存中有没有，先匹配缓存中的数据，发现就直接返回
+#if 1
+    Cache & cacheNode = (Singleton<CacheManager>::getInstance(
+            Singleton<Configuration>::getInstance(PATH)->getCachePath()))
+           ->getCache(tNumber);
+    if(response(cacheNode))//先判断缓存中有没有，先匹配缓存中的数据，发现就直接返回
     {
         //TODO 从缓存中进行查找
+        return;
     }
+#endif
     else
     {
         queryIndexTable();
@@ -73,7 +83,7 @@ void Task::execute()
             _resultQue.pop();
         }
         string response = cJSON_PrintUnformatted(root);
-        
+        cacheNode.addElement(_queryWord, response);
 #endif
         _conn->sendInLoop(response);
         cJSON_Delete(root);

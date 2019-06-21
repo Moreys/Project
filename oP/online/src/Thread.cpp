@@ -8,12 +8,37 @@
 #include "Thread.hpp"
 
 #include <errno.h>
+#include <iostream>
+using namespace morey;
+
 
 using std::cout;
 using std::endl;
 
+
 namespace morey
 {
+
+__thread int tNumber;
+
+using TareadCallback = function<void()>;
+
+struct ThreadData
+{
+    int _number;
+    TareadCallback _cb;
+    ThreadData(int number, TareadCallback cb)
+    : _number(number)
+    , _cb(cb)
+    {}
+
+   void runInThread()
+   {
+      tNumber =  _number;
+       if(_cb)
+           _cb();
+   }
+};
 
 Thread::~Thread()
 {
@@ -25,9 +50,10 @@ Thread::~Thread()
     cout << "~Thread()" << endl;
 }
 
-void Thread::start()
+void Thread::start(int number)
 {
-    if(pthread_create(&_pthid, nullptr, threadFunc, this))
+    ThreadData * threadData = new ThreadData(number, _cb);
+    if(pthread_create(&_pthid, nullptr, threadFunc,threadData))
     {
         perror("pthread_create");
         return;
@@ -46,10 +72,12 @@ void Thread::join()
 
 void * Thread::threadFunc(void * arg)
 {
-    Thread * pthread = static_cast<Thread*>(arg);
-    if(pthread)
-        pthread->_cb();
+    ThreadData * pthreadData = static_cast<ThreadData*>(arg);
+    if(pthreadData)
+        pthreadData->_cb();
 
+   delete pthreadData;
+   
    return nullptr; 
 }
 
