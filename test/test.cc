@@ -63,6 +63,40 @@ public:
         }
         return dp[n1][n2];
     }
+
+
+    int cnDistance(string word1, string word2)
+    {
+        vector<Character> queryChara = getOneChareacter(word1);
+        vector<Character> indexChara = getOneChareacter(word2);
+        int n1 = queryChara.size(), n2 = indexChara.size();
+        int dp[n1 + 1][n2 + 1];
+        for(int i = 0; i <= n1; ++i)
+        {
+            dp[i][0] = i;
+        }
+        for(int i = 0; i <= n2; ++i)
+        {
+            dp[0][i] = i;
+        }
+        int temp;
+        for(int i = 1; i <= n1; ++i)
+        {
+            for(int j = 1; j <= n2; ++j)
+            {
+                if(word1.at(i - 1) == word2.at(j -1))
+                {
+                    temp = 0;
+                }
+                else
+                {
+                    temp = 1;
+                }
+            }
+        }
+    return dp[n1][n2];
+    }
+
 #endif
     int distance( string & rhs,string & lhs )
     {
@@ -101,6 +135,7 @@ public:
         }
         return edit[len1][len2];
     }
+
 
     vector<Character>getOneChareacter(const string & word)
     {
@@ -150,12 +185,15 @@ public:
 #endif
         return ret;
     }
+    
 };
 
 int main()
 {
-    string s1 = "fsdjhellow";
-    string s2 = "hellowww";
+    string s1 = "我也是你大爷";
+    string s2 = "hello";
+    cout << s1.size() << endl;
+    cout << s2.size() << endl;
     Test t1;
     cout << t1.minDistance(s1, s2) << endl;
     cout << "-------------------" << endl;

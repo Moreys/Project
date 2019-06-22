@@ -54,6 +54,22 @@ void Configuration::readConfiguration()
         cout << "ifstream open error" << endl;
     }
 }
+
+string Configuration::getEnTxtPath()
+{
+    string enTxt;
+    auto it = _configMap.find("enTxt");
+    if(it == _configMap.end())
+    {
+        cout << "enTxt获取路径错误" << endl;
+    }
+    else
+    {
+        enTxt = it->second;
+    }
+    return enTxt;
+}
+
 string Configuration::getCnTxtPath()
 {
     string cndicTxt;
@@ -68,6 +84,7 @@ string Configuration::getCnTxtPath()
     }
     return cndicTxt;
 }
+
 string Configuration::getCnDicPath()
 {
     string cndict;
@@ -83,10 +100,56 @@ string Configuration::getCnDicPath()
     return cndict;
 }
 
+string Configuration::getEnDicPath()
+{
+    string endict;
+    auto it = _configMap.find("endict");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        endict = it->second;
+    }
+    return endict;
+}
+
+string Configuration::getEnFile()
+{
+    string enFile;
+    auto it = _configMap.find("enFile");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        enFile = it->second;
+    }
+    return enFile;
+}
+
+string Configuration::getEnTxt()
+{
+    string enTxt;
+    auto it = _configMap.find("enTxt");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        enTxt = it->second;
+    }
+    return enTxt;
+}
+
+
 string Configuration::getcnFile()
 {
     string cnfile;
-    auto it = _configMap.find("cnfile");
+    auto it = _configMap.find("cnFile");
     if(it == _configMap.end())
     {
         cout << "获取路径错误" << endl;
@@ -97,10 +160,40 @@ string Configuration::getcnFile()
     }
     return cnfile;
 }
+
 string Configuration::getCnIdx()
 {
     string cnIdx;
     auto it = _configMap.find("cnidx");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        cnIdx = it->second;
+    }
+    return cnIdx;
+}
+string Configuration::getEnIdx()
+{
+    string cnIdx;
+    auto it = _configMap.find("enidx");
+    if(it == _configMap.end())
+    {
+        cout << "获取路径错误" << endl;
+    }
+    else
+    {
+        cnIdx = it->second;
+    }
+    return cnIdx;
+}
+
+string Configuration::getIdx()
+{
+    string cnIdx;
+    auto it = _configMap.find("index");
     if(it == _configMap.end())
     {
         cout << "获取路径错误" << endl;

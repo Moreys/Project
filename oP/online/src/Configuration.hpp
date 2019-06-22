@@ -37,10 +37,10 @@ public:
 public:
     string getIp() const;
     unsigned short getPort() const;
-    string getEnglishDic() const;
-    string getChianDic() const;
-    string getEnIndex() const;
-    string getChIndex() const;
+    string getEnDic() const;
+    string getCnDic() const;
+    string getEnIdx() const;
+    string getCnIdx() const;
     string getCachePath() const;
 private:
     string _filepath;

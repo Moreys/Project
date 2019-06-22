@@ -38,7 +38,7 @@ int main(int argc, const char *argv[])
 	char buf[1024];
 	memset(buf, 0, sizeof(buf));
 	read(peerfd, buf, sizeof(buf));
-	printf("%s\n", buf);
+	//printf("%s\n", buf);
 
     do_service(peerfd);
     return 0;
@@ -53,7 +53,7 @@ void do_service(int sockfd)
     while(1)
     {
         fgets(sendbuf, sizeof sendbuf, stdin);
-        cout << sendbuf << endl;
+        cout << "发送：" << sendbuf;
         write(sockfd, sendbuf, strlen(sendbuf));
 
         //read
@@ -71,7 +71,7 @@ void do_service(int sockfd)
             exit(EXIT_SUCCESS);
         }
 
-        printf("receive msg : %s\n", recvbuf);
+        printf("收到的消息 : %s\n", recvbuf);
 
         memset(recvbuf, 0, sizeof recvbuf);
         memset(sendbuf, 0, sizeof sendbuf);

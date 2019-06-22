@@ -25,24 +25,41 @@ DictProducer::DictProducer(const string & dir)
     : _dir(dir)
       , _config(_dir)
     {
-        get_files();
+        cout << "初始化" << endl;
+        init();
     }
 
 void DictProducer::init()
 {
 #if 0 //英文词典索引的建立
-    build_dict();
-    reand_dict();
-    build_index();
+    _dictionary.dispose(_config.getEnFile(), _config.getEnTxt());
+    cout << "获取完成entxt" << endl;
+    build_enDict();
+    cout << "获取完成build endict" << endl;
+    build_cn_dict();
+    cout << "获取完成build cn dict" << endl;
+    pushIdxDict();
+    cout << "获取完成写入文件完成" << endl;
+#endif
+
+#if 0 //中文词典索引的建立
+    reand_endict();
+    cout << "读取英文词典完成" << endl;
+    build_enIndex();
+    cout << "英文索引建立完毕" << endl;
+    push_enIndex();
+    cout << "英文索引写入完毕" << endl;
 #endif
 
 #if 1 //中文词典索引的建立
-    //build_cn_dict();
-    //push_cndict();
     reand_cndict();
+    cout << "读取中文词典完成" << endl;
     build_cnIndex();
+    cout << "中文索引建立完毕" << endl;
     push_cnIndex();
+    cout << "中文索引写入完毕" << endl;
 #endif
+
 }
 
 vector<string> DictProducer::getOneChareacter( const string & word)
@@ -78,30 +95,28 @@ vector<string> DictProducer::getOneChareacter( const string & word)
     return ret;
 }
 
-void DictProducer::build_dict()
+void DictProducer::build_enDict()
 {
-    string ifs, ofs;
-    map<string, string>::iterator it = _endict.find("txt");
-    if(it == _endict.end())
+    ifstream ifsEnT(_config.getEnTxt());
+    cout << "英文语料获取路径" << _config.getEnTxt() << endl;
+    if(!ifsEnT)
     {
-        cout << "没有找到" << endl;
+        cout << "获取中文文件获取错误" << endl;
     }
-    else
+    string line;
+    while(ifsEnT >> line)
     {
-        ifs = it->second;
+        map<string, int>::iterator it = _endict.find(line);
+        if(it == _cndict.end())
+        {
+            _endict.insert(map<string,int>::value_type(line,1));
+        }
+        else
+        {
+            ++_endict[line];
+        }
     }
-    map<string, string>::iterator it2 = _endict.find("dict");
-    if(it2 == _endict.end())
-    {
-        cout << "没有找到" << endl;
-    }
-    else
-    {
-        ofs = it2->second;
-    }
-    _dictionary.dispose(ifs, ofs);
-    _dictionary.read(ofs);
-    _dictionary.store(ofs);
+    ifsEnT.close();
 }
 
 void DictProducer::build_cn_dict()
@@ -143,20 +158,19 @@ void DictProducer::build_cn_dict()
             ++_cndict[elem];
         }
     }
-
 }
 
 void DictProducer::build_enIndex()
 {
-    int flag = 15;
+    int flag = 10;
     string str;
     stringstream stream;
-    set<int> setInd;
     for(int idx = 'a'; idx != 'z' + 1; ++idx)
     {
         stream << (char)idx;
         str = stream.str();
         stream.str("");
+        set<int> setInd;
         for(auto & elem : _enIdx)
         {
             for(int i = 0; i != flag; ++i)
@@ -170,19 +184,17 @@ void DictProducer::build_enIndex()
             }
         }
         cout << "完成" << str <<endl;
-        setInd.clear();
     }
 }
 
 void DictProducer::build_cnIndex()
 {
     string key;
-    stringstream stream;
-    set<int> setInd;
     vector<string> vectmp;
     vector<string> vectmp2;
     for(auto & elem : _cnIdx)
     {
+        set<int> setInd;
         vectmp = getOneChareacter(elem.first);
         key = vectmp[0];
         for(auto & elem2 : _cnIdx) 
@@ -198,7 +210,6 @@ void DictProducer::build_cnIndex()
                 }
             }
         }
-        setInd.clear();
     }
 #if 0
     for(int idx = 'a'; idx != 'z' + 1; ++idx)
@@ -224,17 +235,8 @@ void DictProducer::build_cnIndex()
 
 void DictProducer::reand_endict()
 {
-    string file;
-    map<string, string>::iterator it2 = _endict.find("dict");
-    if(it2 == _endict.end())
-    {
-        cout << "没有找到" << endl;
-    }
-    else
-    {
-        file = it2->second;
-    }
-    ifstream ifs(file);
+    ifstream ifs(_config.getEnDicPath());
+    cout << "_config.getEnDicPath" << _config.getEnDicPath() << endl;
     string line;
     while(getline(ifs, line))
     {
@@ -291,14 +293,11 @@ void DictProducer::show_dict() const
 }
 #endif
 
-void DictProducer::get_files()
-{
-    _endict = _config.getConfigMap();
-}
 
 void DictProducer::push_cndict()
 {
     ofstream ofsCnT(_config.getCnDicPath());
+    cout << _config.getCnDicPath() << endl;
     if(!ofsCnT)
     {
         cout << "获取文件错误" << endl;
@@ -313,17 +312,23 @@ void DictProducer::push_cndict()
 
 void DictProducer::push_endict()
 {
-    string file;
-    map<string, string>::iterator it2 = _endict.find("index");
-    if(it2 == _endict.end())
+    ofstream ofs(_config.getEnDicPath());
+    if(!ofs)
     {
-        cout << "没有找到" << endl;
+        cout << "获取英文词典路径错误" << endl;
+        return;
     }
-    else
+    for(auto & elem : _endict)
     {
-        file = it2->second;
+        ofs << elem.first << "   " << elem.second << endl;
     }
-    ofstream ofs(file);
+    ofs.close();
+}
+
+void DictProducer::push_enIndex()
+{
+    ofstream ofs(_config.getEnIdx());
+    cout << _config.getCnIdx() << endl;
     for(auto & elem : _enMapIdx)
     {
         ofs << elem.first << " ";
@@ -337,6 +342,7 @@ void DictProducer::push_endict()
 void DictProducer::push_cnIndex()
 {
     ofstream ofs(_config.getCnIdx());
+    cout << _config.getCnIdx() << endl;
     for(auto & elem : _cnMapIdx)
     {
         ofs << elem.first << " ";
@@ -345,6 +351,16 @@ void DictProducer::push_cnIndex()
         ofs << endl;
     }
     ofs.close();
+}
+
+
+void DictProducer::pushIdxDict()
+{
+#if 0
+    push_endict();
+    push_cndict();
+#endif
+
 }
 
 }//end of namespace morey

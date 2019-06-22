@@ -30,11 +30,17 @@ public:
     {
         return _filepath;
     }
+    string getEnTxtPath();
     string getCnTxtPath();
     string getCnDicPath();
+    string getEnDicPath();
     string getcnFile();
     string getCnIdx();
     vector<string> & getCndictFile();
+    string getEnTxt();
+    string getEnFile();
+    string getIdx();
+    string getEnIdx();
 private:
     string _filepath;
     map<string, string> _configMap;

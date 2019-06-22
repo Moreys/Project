@@ -82,7 +82,7 @@ unsigned short Configuration::getPort() const
    return (short)stoi(port);
 }
 
-string Configuration::getEnglishDic() const
+string Configuration::getEnDic() const
 {
     string enDic;
     auto it = _configMap.find("enDic");
@@ -96,10 +96,11 @@ string Configuration::getEnglishDic() const
    }
    return enDic;
 }
-string Configuration::getChianDic() const
+
+string Configuration::getCnDic() const
 {
     string chDic;
-    auto it = _configMap.find("chDic");
+    auto it = _configMap.find("cnDict");
     if(it == _configMap.end())
     {
         LogError("error message, %s","读取中文词典错误");
@@ -111,7 +112,7 @@ string Configuration::getChianDic() const
    return chDic;
 }
 
-string Configuration::getEnIndex() const
+string Configuration::getEnIdx() const
 {
     string enIndex;
     auto it = _configMap.find("enIndex");
@@ -125,10 +126,11 @@ string Configuration::getEnIndex() const
    }
    return enIndex;
 }
-string Configuration::getChIndex() const
+
+string Configuration::getCnIdx() const
 {
     string chIndex;
-    auto it = _configMap.find("chIndex");
+    auto it = _configMap.find("cnIdx");
     if(it == _configMap.end())
     {
         LogError("error message, %s","读取中文索引路径出错");

@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <set>
 #include <memory>
 #include <utility>
@@ -37,57 +38,25 @@ struct Result
 class Dictionary
 {
 public:
-    Dictionary(const string & dictPath, const string & indexPath)
-    {
-        ifstream ifsDic(dictPath), ifsIndex(indexPath);
-        if(!ifsDic)
-        {
-            cout << "文件打开错误" << endl;
-            LogError("文件打开错误");
-        }
-        if(!ifsIndex)
-        {
-            cout << "文件打开错误" << endl;
-            LogError("文件打开错误");
-        }
-        string line;
-        while(getline(ifsDic, line))
-        {
-            std::istringstream iss(line);
-            string key;
-            int value;
-            iss >> key >> value;
-            _dict.push_back(make_pair(key.c_str(),value));
-        }
-        string line2;
-        while(getline(ifsIndex, line2))
-        {
-            std::istringstream iss(line2);
-            string ikey;
-            int ivalue;
-            iss >> ikey;
-            set<int> tmp;
-            while(iss >> ivalue)
-            {
-                tmp.insert(ivalue);
-            }
-            _indexTable.insert(make_pair(ikey.c_str(),tmp));
-        }
-    }
+    Dictionary(const string & enDicPath, const string & enIdxPath,
+               const string & cnDicPath, const string & cnIdxPath);
+
+    void init(const string & enDicPath, const string & enIdxPath,
+               const string & cnDicPath, const string & cnIdxPath);
+    
 
 public:
-    vector<std::pair<string, int>> & getDic()
-    {
-        return _dict;
-    }
-    map<string, set< int>> & getIndex()
-    {
-        return _indexTable;
-    }
+    vector<std::pair<string, int>> & getenDic();
+    vector<std::pair<string, int>> & getcnDic();
+    unordered_map<string, set< int>> & getenIdx();
+    unordered_map<string, set< int>> & getcnIdx();
 
 private:
-    vector<std::pair<string, int>> _dict;
-    map<string, set<int>> _indexTable;
+    vector<std::pair<string, int>> _enDict;
+    vector<std::pair<string, int>> _cnDict;
+    unordered_map<string, set<int>> _enIdx;
+    unordered_map<string, set<int>> _cnIdx;
+
 };
 
 }//end of namespace morey

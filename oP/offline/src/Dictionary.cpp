@@ -87,7 +87,6 @@ void Dictionary::dispose(
     string ling;
     while(std::getline(ifs, ling))//没有进循环，下午在看看
     {
-                
         for(int idx = 0; idx != (int)ling.size(); ++idx)
         {
            if(ispunct(ling[idx]))
@@ -95,6 +94,12 @@ void Dictionary::dispose(
                 oneWorld = ' ';
                 ling[idx] = oneWorld;
            }
+           if(isdigit(ling[idx]))
+           {
+                oneWorld = ' ';
+                ling[idx] = oneWorld;
+           }
+
            ling[idx] = tolower(ling[idx]);
         }
         ofs << ling;
@@ -104,5 +109,4 @@ void Dictionary::dispose(
     ofs.close();
 }
 }//end of namespace morey
-
 

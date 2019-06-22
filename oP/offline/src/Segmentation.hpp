@@ -37,7 +37,7 @@ const char* const STOP_WORD_PATH = "../libs/dict/stop_words_zh.utf8";
         vector<string> operator()(const string str)
         {
             vector<string> words;
-            _jieba.CutAll(str, words);
+            _jieba.CutAll(str.c_str(),words);
             return words;
         }
     private:

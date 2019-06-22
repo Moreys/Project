@@ -12,8 +12,11 @@
 #include "Thread.hpp"
 #include "CacheManager.hpp"
 #include "cJSON.hpp"
+#include <unistd.h>
+#include <unordered_map>
 #include <string.h>
 #include <algorithm>
+using std::unordered_map;
 
 
 namespace morey
@@ -36,6 +39,7 @@ bool Task::response(Cache & cache)
     }
     return false;
 }
+
 //function: 执行查询
 void Task::execute()
 {
@@ -128,21 +132,43 @@ vector<Character> Task::getOneChareacter(const string & word)
         }
     }
 #endif
-
     return ret;
 }
 
 //function： 查询索引
 void Task::queryIndexTable()
 {
-    map<string, set<int>> index = (Singleton<Dictionary>::getInstance(
-               Singleton<Configuration>::getInstance(PATH)->getEnglishDic(),
-               Singleton<Configuration>::getInstance(PATH)->getEnIndex()))->getIndex();
-
+    unordered_map<string, set<int>> index;
     vector<Character> oneChareacter = getOneChareacter(_queryWord);
+    string s1 =  oneChareacter[0];
+    if(s1.size() == 1)
+    {
+        index = (Singleton<Dictionary>::getInstance(
+        Singleton<Configuration>::getInstance(PATH)->getEnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getEnIdx(),
+        Singleton<Configuration>::getInstance(PATH)->getCnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getCnIdx()))->getenIdx();
+    }
+    else
+    {
+        index = (Singleton<Dictionary>::getInstance(
+        Singleton<Configuration>::getInstance(PATH)->getEnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getEnIdx(),
+        Singleton<Configuration>::getInstance(PATH)->getCnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getCnIdx()))->getcnIdx();
+    }
+#if 1
+#endif
+    
+#if 0 //测试拆分情况
+    for(auto & elem : oneChareacter)
+    {
+        cout << elem << endl;
+    }
+#endif
     set<int>allRally;
 #if 1
-    for(auto myChare : oneChareacter)
+    for(auto & myChare : oneChareacter)
     {
         auto cit = index.find(myChare);
         if(cit != index.end())
@@ -167,9 +193,32 @@ void Task::queryIndexTable()
 //args: iset: 根据单词首字母得到的索引多对应的所有单词
 void Task::statistic(set<int> & iset)
 {
-    vector<pair<string, int>> dict = (Singleton<Dictionary>::getInstance(
-            Singleton<Configuration>::getInstance(PATH)->getEnglishDic(),
-            Singleton<Configuration>::getInstance(PATH)->getEnIndex()))->getDic();
+    vector<pair<string, int>> dict;
+    vector<Character> oneChareacter = getOneChareacter(_queryWord);
+    string s1 =  oneChareacter[0];
+
+    cout << oneChareacter[0].size() << endl;
+
+    if(s1.size() == 1)
+    {
+        dict = (Singleton<Dictionary>::getInstance(
+        Singleton<Configuration>::getInstance(PATH)->getEnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getEnIdx(),
+        Singleton<Configuration>::getInstance(PATH)->getCnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getCnIdx()))->getenDic();
+    }
+    else
+    {
+        dict = (Singleton<Dictionary>::getInstance(
+        Singleton<Configuration>::getInstance(PATH)->getEnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getEnIdx(),
+        Singleton<Configuration>::getInstance(PATH)->getCnDic(),
+        Singleton<Configuration>::getInstance(PATH)->getCnIdx()))->getcnDic();
+    }
+
+#if 1
+#endif
+
     for(auto & idx : iset)
     {
         string key = dict[idx].first; //找到对应key 的下标
@@ -193,11 +242,10 @@ void Task::statistic(set<int> & iset)
 }
 
 //function: 计算最小编辑距离
-int Task::distance(const string & rhs)
+int Task::distance(const string  rhs)
 {
     vector<Character> queryChara = getOneChareacter(_queryWord);
     vector<Character> indexChara = getOneChareacter(rhs);
-
     int len1, len2;
     len1 = queryChara.size();
     len2 = indexChara.size();

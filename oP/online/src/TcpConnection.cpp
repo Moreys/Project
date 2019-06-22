@@ -44,12 +44,14 @@ string TcpConnection::receive()
 	char buff[65536] = {0};
     char buff1[1024] = {0};
 	_socketIO.readline(buff, sizeof(buff));
-#if 1 //处理得到的数据，由客户端处理，//这里有bug
+#if 0 //处理得到的数据，由客户端处理，//这里有bug
     cout << "处理前收到的大小" << string(buff).size() << endl;    
     memcpy(buff1,buff,strlen(buff) -1);
     cout << "处理后收到的大小" << string(buff1).size() << endl;    
     cout << buff1 << endl;
+    printf("%s", buff1);
 #endif
+    memcpy(buff1,buff,strlen(buff) -1);
 	return string(buff1);
 }
 	

@@ -43,7 +43,7 @@ public:
 private:
     void queryIndexTable();
     void statistic(set<int> & iset);
-    int distance(const string & rhs);
+    int distance(const string  rhs);
     bool response(Cache & cache);
 
     vector<Character>getOneChareacter(const string &);
