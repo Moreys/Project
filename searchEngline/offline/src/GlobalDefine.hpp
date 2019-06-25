@@ -8,7 +8,7 @@
 #ifndef __GLOBALDEFINE_HPP__
 #define __GLOBALDEFINE_HPP__
 
-#define RSSPATH_KEY              "rssPath"
+#define RSSPATH_KEY             "rssFile"
 #define RIPEPAGELIB_KEY         "ripepagelib"
 #define OFFSETLIB_KEY           "offsetlib"
 #define NEWPAGELIB_KEY          "newpagelib"
