@@ -27,20 +27,21 @@ int main()
 
     morey::DirScanner files(conf);
     files();
-#if 0
+#if 1
     conf.debug();
     files.debug();
 #endif
 
+#if 1
     PageLib paglib(conf, files);
-
     time_t t1 = time(NULL);
     paglib.create();
     paglib.store();
     time_t t2 = time(NULL);
     cout << "创建网页库时间为：" << (t2 - t1) << endl;
+#endif
 
-#if 0
+#if 1
     PageLibPreprocessor libProcessor(conf);
     libProcessor.doProcess();
 #endif

@@ -32,7 +32,9 @@ const char* const STOP_WORD_PATH = "../libs/dict/stop_words_zh.utf8";
                      HMM_PATH,
                      USER_DICT_PATH,
                      IDF_PATH,
-                     STOP_WORD_PATH) {}
+                     STOP_WORD_PATH) {
+                cout << "Segmentation()" << endl;
+            }
 
         vector<string> operator()(const string str)
         {

@@ -61,12 +61,9 @@ void RssReader::makePages(vector<string> & pages)
     {
         ostringstream oss;
         oss << "<doc>\n"
-            << "  <docid>" <<(idx + 1) <<
-            "</docid>\n"
-            << "  <title>" << _items[idx]->_title
-            << "</title>\n"
-            << "  <link>"  << _items[idx]->_link
-            << "</link>\n"
+            << "  <docid>" << (idx + 1) << "</docid>\n"
+            << "  <title>" << _items[idx]->_title << "</title>\n"
+            << "  <link>"  << _items[idx]->_link << "</link>\n"
             << "  <content>" << _items[idx]->_content << "</contet>\n"
             <<"/<doc>\n";
         string page = oss.str();
@@ -79,15 +76,19 @@ void RssReader::parseRss(XMLDocument & doc)
     cout << "parsRss(XMLDocument & doc)" << endl;
     XMLElement * root = doc.FirstChildElement();
     XMLElement * channel = root->FirstChildElement("channel");
+    if(NULL == channel)return;
     XMLElement * item = channel->FirstChildElement("item");
+    if(NULL == item)return;
     for(; item; item = item->NextSiblingElement())
     {
         shared_ptr<RssItem> rssItemPtr(new RssItem);
         const char * itemTitle = item->FirstChildElement("title")->GetText();
+        if(NULL == itemTitle)continue;
         const char * itemLink = item->FirstChildElement("link")->GetText();
+        if(NULL == itemLink)continue;
         const char * itemDescription = item->FirstChildElement("description")->GetText();
+        if(NULL == itemDescription)continue;
         const char * iContent = nullptr;
-
         XMLElement * contentEncoded = item->FirstChildElement("content:encoded");
         if(contentEncoded)
         {
@@ -108,6 +109,7 @@ void RssReader::parseRss(XMLDocument & doc)
         _items.push_back(rssItemPtr);
     }
 }
+
 
 #if 0
 

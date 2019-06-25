@@ -23,6 +23,7 @@ Configuration::Configuration(const string & filepath)
 : _filepath(filepath)
 {
     readConfiguration();
+    getStopWordList();
 }
 
 map<string, string> & Configuration::getConfigMap()

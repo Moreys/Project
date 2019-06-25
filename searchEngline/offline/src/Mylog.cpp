@@ -25,7 +25,7 @@ Mylogger::Mylogger() : _myCategory(Category::getRoot().getInstance("mylogger"))
     OstreamAppender *pOstreamAppender = new OstreamAppender("pOstreamAppender", &cout);
     pOstreamAppender->setLayout(pLayout1);
 
-    FileAppender * pFileAppender = new FileAppender("pFileAppender","/root/project/oP/online/log/log.log");
+    FileAppender * pFileAppender = new FileAppender("pFileAppender","/root/project/searchEngline/offline/log/log.log");
     pFileAppender->setLayout(pLayout2);
 
     _myCategory.setAppender(pOstreamAppender);
