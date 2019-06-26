@@ -35,9 +35,9 @@ int main(int argc, const char *argv[])
     if(connect(peerfd, (struct sockaddr*)&addr, len) == -1)
         ERR_EXIT("Connect");
 
-	char buf[1024];
-	memset(buf, 0, sizeof(buf));
-	read(peerfd, buf, sizeof(buf));
+	//char buf[1024 * 1024];
+	//memset(buf, 0, sizeof(buf));
+	//read(peerfd, buf, sizeof(buf));
 	//printf("%s\n", buf);
 
     do_service(peerfd);
@@ -48,7 +48,7 @@ int main(int argc, const char *argv[])
 
 void do_service(int sockfd)
 {
-    char recvbuf[1024] = {0};
+    char recvbuf[1024 * 1024 * 1] = {0};
     char sendbuf[1024] = {0};
     while(1)
     {
@@ -57,7 +57,11 @@ void do_service(int sockfd)
         write(sockfd, sendbuf, strlen(sendbuf));
 
         //read
-        int nread = read(sockfd, recvbuf, sizeof recvbuf);
+        //
+        int length = 0;
+
+        int nread = read(sockfd, recvbuf, sizeof(length));
+        printf("nread = %d\n", nread);
         if(nread == -1)
         {
             if(errno == EINTR)
@@ -70,9 +74,9 @@ void do_service(int sockfd)
             close(sockfd);
             exit(EXIT_SUCCESS);
         }
-
-        printf("收到的消息 : %s\n", recvbuf);
-
+        printf("收到的消息大小 : %d\n", length);
+        nread = read(sockfd, recvbuf, length);
+        printf("收到的消息内容为: %s\n", recvbuf);
         memset(recvbuf, 0, sizeof recvbuf);
         memset(sendbuf, 0, sizeof sendbuf);
     }

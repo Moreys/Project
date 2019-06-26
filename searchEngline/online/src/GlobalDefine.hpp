@@ -15,5 +15,7 @@
 #define NEWOFFSETLIB_KEY        "newoffsetlib"
 #define INVERTIDXLIB_KEY        "invertIdxlib"
 #define STOPWORD_KEY            "stopword"
+#define IP_KEY                  "ip"
+#define PORT_KEY                 "port"
 
 #endif

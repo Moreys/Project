@@ -1,8 +1,8 @@
 /*************************************************************************
-  @FileName:  Noncopyable.hpp
+  @FileName:  Noncopyable.h
   @Author:    morey
   @Email:     zymorey@gmail.com
-  @Time:      2019年06月23日 星期日 08时23分46秒
+  @Time:      2019年06月18日 星期二 15时57分07秒
  ************************************************************************/
                                                                          
 #ifndef __NONCOPYABLE_HPP__
@@ -20,8 +20,8 @@ protected:
     Noncopyable & operator=(const Noncopyable &) = delete;
 };
 
-}
+
+}//end of namespace morey
 
 #endif
-
 
